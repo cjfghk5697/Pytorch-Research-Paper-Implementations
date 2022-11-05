@@ -1,0 +1,13 @@
+params={
+    'image_size':64,
+    'batch_size':64,
+    'pin_memory':False,
+    'num_workers':4,
+    'nz':100,
+    'nc':3,
+    'ngf':64,
+    'ndf':64,
+    'epochs':5,
+    'lr':1e-3,
+    'beta1':0.5
+}
