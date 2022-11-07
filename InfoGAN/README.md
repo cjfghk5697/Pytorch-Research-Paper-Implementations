@@ -5,6 +5,14 @@ You can change parameters in ``config.py`` file. And run my code
 %cd InfoGAN
 python3 main.py
 ```
+## Requirements
+```
+matplotlib==3.6.0
+numpy==1.23.4
+torch==1.13.0
+torchvision==0.14.0
+```
+
 
 ## Results
 
