@@ -1,0 +1,11 @@
+params={
+    'image_size':64,
+    'batch_size':64,
+    'num_workers':2,
+    'pin_memory':True,
+    'lr':0.00005,
+    'epoch':500,
+    'nz':100,
+    'clip_value':1,
+    'critic':5
+}
