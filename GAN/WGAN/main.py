@@ -27,45 +27,46 @@ def wasserstein_loss(x,y):
     return y*torch.mean(x)
 
 for epoch in range(1,params['epoch']+1):
-    for cirtic in range(params['critic']):
-        for i,(data,_) in enumerate(dl):
-            optim_D.zero_grad()
+    for i,(data,_) in enumerate(dl):
+        optim_D.zero_grad()
             
-            real=data[0].to(device)
-            b_size=real.size(0)
-            #r_label=torch.full((b_size,),real_label,dtype=torch.float,device=device)
-            noise=torch.randn(b_size,params['nz'],1,1,device=device)
+        real=data[0].to(device)
+        b_size=real.size(0)
+        noise=torch.randn(b_size,params['nz'],1,1,device=device)
 
-            gen_imgs=net_G(noise).detach()
-            #f_label=torch.full((b_size,),real_label,dtype=torch.float,device=device)
-            output_data=data.view(-1)
-            output_gen=gen_imgs.view(-1)
-            d_loss_real=wasserstein_loss(output_data,real_label)
-            d_loss_fake=wasserstein_loss(gen_imgs,fake_label)
+        gen_imgs=net_G(noise).detach()
+        output_data=data.view(-1)
+        output_gen=gen_imgs.view(-1)
+        d_loss_real=wasserstein_loss(output_data,real_label)
+        d_loss_fake=wasserstein_loss(gen_imgs,fake_label)
             
-            d_loss=d_loss_fake+d_loss_real
-            d_loss.requires_grad_(True)
-            d_loss.backward()
-            optim_D.step()
-            for p in net_D.parameters():
-                p.data.clamp_(-params['clip_value'],params['clip_value'])
+        d_loss=d_loss_fake+d_loss_real
+        d_loss.requires_grad_(True)
+        d_loss.backward()
+        optim_D.step()
+        for p in net_D.parameters():
+            p.data.clamp_(-params['clip_value'],params['clip_value'])
 
+        if i % params['critic']==0:
+                
+            optim_G.zero_grad()
+            g_img=net_G(noise)
 
-            
-    optim_G.zero_grad()
-    g_img=net_G(noise)
+            g_loss=wasserstein_loss(net_D(g_img),fake_label)
+            g_loss.backward()
+            optim_G.step()
 
-    g_loss=wasserstein_loss(net_D(g_img),fake_label)
-    g_loss.backward()
-    optim_G.step()
+            D_losses.append(d_loss)
+            G_losses.append(g_loss)
+        
+    print(f'Epoch : {epoch} D Loss : {d_loss.item():.3f} G Loss : {g_loss.item():.3f}')
 
-    D_losses.append(d_loss)
-    G_losses.append(g_loss)
-    
-    print(f'Epoch : {epoch} D Loss : {d_loss:.3f} G Loss : {g_loss:.3f}')
-
-    if (iters % 500 == 0) or ((epoch == params['epoch']-1)):
+    if((epoch+1) == 1 or (epoch+1) == params['epochs']/2):
         with torch.no_grad():
-            fake = net_G(fixed_noise).detach().cpu()
-        img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
+            gen_data = net_G(fixed_noise).detach().cpu()
+        plt.figure(figsize=(10, 10))
+        plt.axis("off")
+        plt.imshow(np.transpose(vutils.make_grid(gen_data, nrow=10, padding=2, normalize=True), (1,2,0)))
+        plt.savefig("Epoch_%d {}".format('MNIST') %(epoch+1))
+        plt.close('all') 
     iters += 1
