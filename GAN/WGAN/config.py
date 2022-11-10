@@ -6,6 +6,9 @@ params={
     'lr':0.00005,
     'epoch':500,
     'nz':100,
+    'nc':3,
     'clip_value':1,
-    'critic':5
+    'critic':5,
+    'ndf':64,
+    'ngf':64,
 }

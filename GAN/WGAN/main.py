@@ -24,7 +24,7 @@ G_losses=[]
 D_losses=[]
 
 def wasserstein_loss(x,y):
-    return torch.mean(x*y)
+    return y*torch.mean(x)
 
 for epoch in range(1,params['epoch']+1):
     for cirtic in range(params['critic']):
@@ -33,16 +33,18 @@ for epoch in range(1,params['epoch']+1):
             
             real=data[0].to(device)
             b_size=real.size(0)
-            r_label=torch.full((b_size,),real_label,dtype=torch.float,device=device)
+            #r_label=torch.full((b_size,),real_label,dtype=torch.float,device=device)
             noise=torch.randn(b_size,params['nz'],1,1,device=device)
 
             gen_imgs=net_G(noise).detach()
-            f_label=torch.full((b_size,),real_label,dtype=torch.float,device=device)
+            #f_label=torch.full((b_size,),real_label,dtype=torch.float,device=device)
+            output_data=data.view(-1)
+            output_gen=gen_imgs.view(-1)
+            d_loss_real=wasserstein_loss(output_data,real_label)
+            d_loss_fake=wasserstein_loss(gen_imgs,fake_label)
             
-            d_loss_real=wasserstein_loss(data,r_label)
-            d_loss_fake=wasserstein_loss(gen_imgs,f_label)
-            d_loss=0.5*np.add(d_loss_fake,d_loss_real)
-            
+            d_loss=d_loss_fake+d_loss_real
+            d_loss.requires_grad_(True)
             d_loss.backward()
             optim_D.step()
             for p in net_D.parameters():
@@ -53,16 +55,16 @@ for epoch in range(1,params['epoch']+1):
     optim_G.zero_grad()
     g_img=net_G(noise)
 
-    g_loss=wasserstein_loss(net_D(g_img),f_label)
+    g_loss=wasserstein_loss(net_D(g_img),fake_label)
     g_loss.backward()
     optim_G.step()
 
     D_losses.append(d_loss)
     G_losses.append(g_loss)
     
-    print(f'Epoch : {epoch} D Loss : {d_loss} G Loss : {g_loss}')
+    print(f'Epoch : {epoch} D Loss : {d_loss:.3f} G Loss : {g_loss:.3f}')
 
-    if (iters % 500 == 0) or ((epoch == params['epochs']-1)):
+    if (iters % 500 == 0) or ((epoch == params['epoch']-1)):
         with torch.no_grad():
             fake = net_G(fixed_noise).detach().cpu()
         img_list.append(vutils.make_grid(fake, padding=2, normalize=True))

@@ -5,7 +5,7 @@ from config import params
 from torch.utils.data import DataLoader
 
 def get_data(batch_size,num_workers,pin_memory=False):
-    p2d='./DCGAN'
+    p2d='./InfoGAN'
 
     train_ds=dset.STL10(
         root=p2d,
