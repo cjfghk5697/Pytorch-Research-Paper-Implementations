@@ -50,7 +50,6 @@ class Discriminator(nn.Module):
             D_conv(params['ndf']*2,params['ndf']*4,4,2,1),
             D_conv(params['ndf']*4,params['ndf']*8,4,2,1),
             nn.Conv2d(params['ndf']*8,1,4,1,0,bias=False),
-            nn.Sigmoid()
         )
 
     def forward(self,x):
