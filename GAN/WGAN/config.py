@@ -7,7 +7,7 @@ params={
     'epoch':500,
     'nz':100,
     'nc':3,
-    'clip_value':1,
+    'clip_value':0.01,
     'critic':5,
     'ndf':64,
     'ngf':64,
