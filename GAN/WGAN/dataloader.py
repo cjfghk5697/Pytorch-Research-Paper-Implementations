@@ -5,17 +5,13 @@ from torch.utils.data import DataLoader
 def get_data(batch_size,num_workers,image_size,pin_memory=False):
     p2d='./WGAN'
 
-    ds=dset.STL10(
+    ds=dset.MNIST(
             root=p2d,
-            split='train',
+            train=True,
             download=True, 
             transform=transforms.Compose([
                 transforms.ToTensor(),
-                transforms.Resize((image_size,image_size)),
-                transforms.Normalize(
-                                [0.485, 0.456, 0.406],
-                                [0.229, 0.224, 0.225]),
-        ]),
+                transforms.Normalize([0.5], [0.5])]),
     )
     dl=DataLoader(
         ds,

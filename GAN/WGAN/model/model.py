@@ -1,57 +1,48 @@
 import torch.nn as nn
+import numpy as np
 from config import params
 
-class G_conv(nn.Module):
-    def __init__(self,in_channels,out_channels,*args):
-        super(G_conv,self).__init__()
-        self.conv=nn.Sequential(
-            nn.ConvTranspose2d( in_channels,out_channels,*args, bias=False),
-            nn.BatchNorm2d(out_channels),
-            nn.ReLU(True),
-        )
-    def forward(self,x):
-        return self.conv(x)
+img_shape =(params['nc'],params['img_size'],params['img_size'])
 
 class Generator(nn.Module):
     def __init__(self):
-        super(Generator,self).__init__()
-        self.main=nn.Sequential(
-            G_conv(params['nz'],params['ngf']*8,4,1,0),
-            G_conv(params['ngf']*8,params['ngf']*4,4,2,1),
-            G_conv(params['ngf']*4,params['ngf']*2,4,2,1),
-            G_conv(params['ngf']*2,params['ngf'],4,2,1),
+        super(Generator, self).__init__()
 
-            nn.ConvTranspose2d(params['ngf'],params['nc'],4,2,1,bias=False),
+        def block(in_feat, out_feat, normalize=True):
+            layers = [nn.Linear(in_feat, out_feat)]
+            if normalize:
+                layers.append(nn.BatchNorm1d(out_feat, 0.8))
+            layers.append(nn.LeakyReLU(0.2, inplace=True))
+            return layers
+
+        self.model = nn.Sequential(
+            *block(params['nz'], 128, normalize=False),
+            *block(128, 256),
+            *block(256, 512),
+            *block(512, 1024),
+            nn.Linear(1024, int(np.prod(img_shape))),
             nn.Tanh()
         )
-    
-    def forward(self,x):
-        return self.main(x)
 
-class D_conv(nn.Module):
-    def __init__(self,in_channels,out_channels,*args):
-        super(D_conv,self).__init__()
-        self.conv=nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(out_channels),
-            nn.LeakyReLU(0.2, inplace=True),
-        )
+    def forward(self, z):
+        img = self.model(z)
+        img = img.view(img.shape[0], *img_shape)
+        return img
 
-    def forward(self,x):
-        return self.conv(x)
 
 class Discriminator(nn.Module):
     def __init__(self):
-        super(Discriminator,self).__init__()
-        self.main=nn.Sequential(
-            nn.Conv2d(params['nc'],params['ndf'],4,2,1,bias=False),
-            nn.LeakyReLU(0.2,inplace=True),
-            D_conv(params['ndf'],params['ndf']*2,4,2,1),
-            D_conv(params['ndf']*2,params['ndf']*4,4,2,1),
-            D_conv(params['ndf']*4,params['ndf']*8,4,2,1),
-            nn.Conv2d(params['ndf']*8,1,4,1,0,bias=False),
-            nn.Sigmoid()
+        super(Discriminator, self).__init__()
+
+        self.model = nn.Sequential(
+            nn.Linear(int(np.prod(img_shape)), 512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(256, 1),
         )
 
-    def forward(self,x):
-        return self.main(x)
+    def forward(self, img):
+        img_flat = img.view(img.shape[0], -1)
+        validity = self.model(img_flat)
+        return validity

@@ -1,6 +1,5 @@
 params={
     'nz':100,
-    'nc':3,
-    'ngf':64,
-    'ndf':64,
+    'nc':1,
+    'img_size':28
 }
