@@ -3,7 +3,7 @@ params={
     'batch_size':64,
     'pin_memory':False,
     'num_workers':4,
-    'epochs':5,
+    'epochs':300,
     'lr':1e-3,
-    'beta1':0.5
+    'T':300
 }
