@@ -1,7 +1,9 @@
 from config import params
+import matplotlib.pyplot as plt
 import torch.nn.functional as F
 import torch
 
+device="cuda" if torch.cuda.is_available() else "cpu"
 
 def linear_beta_schedule(timesteps,start=0.0001,end=0.02):
     return torch.linspace(start,end,timesteps)
@@ -65,7 +67,7 @@ def sample_timestep(x, t):
 @torch.no_grad()
 def sample_plot_image():
     # Sample noise
-    img_size = IMG_SIZE
+    img_size = params['image_size']
     img = torch.randn((1, 3, img_size, img_size), device=device)
     plt.figure(figsize=(15,15))
     plt.axis('off')
