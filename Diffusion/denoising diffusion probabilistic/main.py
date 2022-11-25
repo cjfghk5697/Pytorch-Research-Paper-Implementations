@@ -5,7 +5,7 @@ import torch.optim as optim
 import torch
 
 model=SimpleUnet()
-device="cuda" if torch.cuda.is_availabe() else "cpu"
+device="cuda" if torch.cuda.is_available() else "cpu"
 model.to(device)
 optimizer=optim.Adam(model.parameters(), lr=params['lr'])
 epochs=params['epochs']
