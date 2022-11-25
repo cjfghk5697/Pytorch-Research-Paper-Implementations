@@ -4,7 +4,7 @@ from config import params
 
 from torch.utils.data import DataLoader
 
-def get_data(batch_size,num_workers,pin_memory=False):
+def get_data():
     p2d='./diffusion'
 
     train_ds=dset.StanfordCars(
@@ -20,9 +20,9 @@ def get_data(batch_size,num_workers,pin_memory=False):
 
     train_dl=DataLoader(
         train_ds,
-        batch_size=batch_size,
-        pin_memory=pin_memory,
-        num_workers=num_workers
+        batch_size=params['batch_size'],
+        pin_memory=params['pin_memory'],
+        num_workers=params['num_workers']
     )
 
 
