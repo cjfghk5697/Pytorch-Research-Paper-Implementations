@@ -1,1 +1,0 @@
-https://github.com/lernapparat/lernapparat/blob/master/style_gan/pytorch_style_gan.ipynb
