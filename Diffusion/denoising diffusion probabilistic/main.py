@@ -15,7 +15,7 @@ for epoch in range(epochs):
     for step, batch in enumerate(dataloader):
         optimizer.zero_grad()
         
-        t=torch.randint(0,params['T'],(params['batch_size'],),device=device).long()
+        t=torch.randint(0,params['T'],(batch[0].shape[0],),device=device).long()
         loss=get_loss(model,batch[0],t)
         loss.backward()
         optimizer.step()
