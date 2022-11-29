@@ -20,7 +20,7 @@ class VGG(nn.Module):
     To Create VGG 
     """
 
-    def __init__(self,config,num_classes=1000):
+    def __init__(self,config,num_classes=10):
         super(VGG,self).__init__()
         self.config=config
         self.FC=nn.Sequential(
