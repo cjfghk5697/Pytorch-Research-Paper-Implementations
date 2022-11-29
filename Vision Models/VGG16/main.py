@@ -1,4 +1,3 @@
-import time
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -17,14 +16,14 @@ criterion=nn.CrossEntropyLoss()
 for epoch in range(1,params['epoch']):
     for data,target in train_dl:
         model.train()
-        optim.zero_grad()
+        opt.zero_grad()
         data=data.to(device)
         target=target.to(device)
         output=model(data)
         loss=criterion(output,target)
         loss.backward()
         opt.step()
-        print(f'Epoch : {epoch} Loss : {loss.item():.3f}')
+    print(f'Epoch : {epoch} Loss : {loss.item():.3f}')
 
     for data, target in valid_dl:
         model.eval()
@@ -33,4 +32,4 @@ for epoch in range(1,params['epoch']):
             target=target.to(device)
             output=model(data)
             val_loss=criterion(output,target)
-            print(f'Valid Loss : {val_loss.item():.3f}')
+    print(f'Valid Loss : {val_loss.item():.3f}')

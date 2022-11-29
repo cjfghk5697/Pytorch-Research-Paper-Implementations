@@ -1,4 +1,4 @@
-from torchvision.utils import DataLoader
+from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision import transforms
 from config import params
@@ -8,6 +8,7 @@ def get_data():
     train_ds=datasets.STL10(
         p2d,
         split='train',
+        download=True,
         transform=transforms.Compose([
             transforms.ToTensor(),
             transforms.Resize(224),
@@ -20,6 +21,7 @@ def get_data():
     valid_ds=datasets.STL10(
         p2d,
         split='test',
+        download=True,
         transform=transforms.Compose([
             transforms.ToTensor(),
             transforms.Resize(224),

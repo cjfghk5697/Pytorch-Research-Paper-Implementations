@@ -5,7 +5,8 @@ from torch.utils.data import DataLoader
 def get_data(batch_size,num_workers,pin_memory=False):
     path2data='/workspaces/codespace/GoogleNet'
 
-    train_ds=datasets.STL10(path2data,split='train',
+    train_ds=datasets.STL10(path2data,
+                        split='train',
                         download=True,
                         transform=transforms.Compose([
                             transforms.ToTensor(),
@@ -15,7 +16,8 @@ def get_data(batch_size,num_workers,pin_memory=False):
                                 [0.229, 0.224, 0.225]),
                         ])
                         )
-    val_ds=datasets.STL10(path2data,split='test',
+    val_ds=datasets.STL10(path2data,
+                        split='test',
                         download=True,
                         transform=transforms.Compose([
                             transforms.ToTensor(),
@@ -27,11 +29,13 @@ def get_data(batch_size,num_workers,pin_memory=False):
                         )
 
     
-    train_dl=DataLoader(train_ds,batch_size=batch_size,
+    train_dl=DataLoader(train_ds,
+                        batch_size=batch_size,
                         num_workers=num_workers,
                         pin_memory=pin_memory
                         )
-    valid_dl=DataLoader(val_ds,batch_size=batch_size,
+    valid_dl=DataLoader(val_ds,
+                        batch_size=batch_size,
                         num_workers=num_workers,
                         pin_memory=pin_memory
                         )
