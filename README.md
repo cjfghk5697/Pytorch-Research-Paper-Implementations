@@ -7,7 +7,8 @@
   * [Paper review](https://github.com/cjfghk5697/Paper_Review)
   * [Vision Implementation](#vision-implementation)
     + [GoogleNet](#googlenet)
-    + [ResNet](#ResNet)
+    + [ResNet](#resnet)
+    + [VGG16](#vgg16)
   * [GAN Implementation](#gan-implementation)
     + [DCGAN](#dcgan)
     + [InfoGAN](#infogan)
@@ -35,6 +36,13 @@ $ %cd "./Paper_Implementation/Vision Models/ResNet"
 $ python main.py
 ```
 
+### VGG16
+```
+$ %cd "./Paper_Implementation/Vision Models/VGG16"
+$ python main.py
+```
+
+
 ## GAN Implementation
 ### DCGAN
 ```
@@ -52,7 +60,7 @@ $ %cd "./Paper_Implementation/GAN/WGAN"
 $ python main.py
 ```
 ## Diffusion Implementation
-### Denoising Diffusion Probabilistic Model
+### Denoising Diffusion Probabilistic Model(DDPM)
 ```
 $ %cd "./Paper_Implementation/Diffusion/denoising diffusion probabilistic"
 $ python main.py
