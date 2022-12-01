@@ -1,4 +1,6 @@
 from config import params
+from torchvision import transforms 
+import numpy as np
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 import torch
@@ -52,7 +54,7 @@ def get_loss(model, x_0, t):
 
 
 @torch.no_grad()
-def sample_timestep(x, t):
+def sample_timestep(model,x, t):
     """
     Calls the model to predict the noise in the image and returns 
     the denoised image. 
@@ -77,7 +79,7 @@ def sample_timestep(x, t):
         return model_mean + torch.sqrt(posterior_variance_t) * noise 
 
 @torch.no_grad()
-def sample_plot_image():
+def sample_plot_image(model,time):
     # Sample noise
     img_size = params['image_size']
     img = torch.randn((1, 3, img_size, img_size), device=device)
@@ -88,8 +90,25 @@ def sample_plot_image():
 
     for i in range(0,T)[::-1]:
         t = torch.full((1,), i, device=device, dtype=torch.long)
-        img = sample_timestep(img, t)
+        img = sample_timestep(model,img, t)
         if i % stepsize == 0:
             plt.subplot(1, num_images, i/stepsize+1)
             show_tensor_image(img.detach().cpu())
+    plt.savefig(f"{time} epochs")
     plt.show()       
+
+
+def show_tensor_image(image):
+    reverse_transforms = transforms.Compose([
+        transforms.Lambda(lambda t: (t + 1) / 2),
+        transforms.Lambda(lambda t: t.permute(1, 2, 0)), # CHW to HWC
+        transforms.Lambda(lambda t: t * 255.),
+        transforms.Lambda(lambda t: t.numpy().astype(np.uint8)),
+        transforms.ToPILImage(),
+    ])
+
+    # Take first image of batch
+    if len(image.shape) == 4:
+        image = image[0, :, :, :] 
+    plt.imshow(reverse_transforms(image))
+    

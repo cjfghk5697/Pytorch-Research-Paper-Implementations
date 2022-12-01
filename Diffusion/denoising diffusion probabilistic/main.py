@@ -1,6 +1,6 @@
 from models.model import SimpleUnet
 from dataloader import get_data
-from utils import get_loss
+from utils import get_loss,sample_plot_image
 from config import params
 import torch.optim as optim
 import torch
@@ -22,4 +22,5 @@ for epoch in range(epochs):
 
         if epoch % 5 == 0 and step == 0:
             print(f"Epoch {epoch} | step {step:03d} Loss: {loss.item()} ")
+            sample_plot_image(model,epoch)
 

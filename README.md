@@ -16,7 +16,7 @@
     + [InfoGAN](#infogan)
     + [WGAN](#wgan)
   * [Diffusion Implementation](#diffusion-implementation)
-    + [Denoising Diffusion Probabilistic Model](#denoising-diffusion-probabilistic-model)
+    + [DDPM](#denoising-diffusion-probabilistic-model(ddpm))
     
 ## Installation
 ```
