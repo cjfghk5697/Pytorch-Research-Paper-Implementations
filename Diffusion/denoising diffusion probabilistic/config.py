@@ -1,3 +1,9 @@
+"""
+All of params is based on DDPM paper.
+ T(Int) : 1000
+ beta(Float) : 1e-4
+ end(Float) : 0.02
+"""
 params={
     'image_size':64,
     'batch_size':64,
@@ -5,5 +11,7 @@ params={
     'num_workers':4,
     'epochs':300,
     'lr':1e-3,
-    'T':300
+    'T':1000,
+    'beta':1e-4,
+    'end':0.02
 }

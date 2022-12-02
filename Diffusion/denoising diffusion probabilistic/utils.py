@@ -7,7 +7,7 @@ import torch
 
 device="cuda" if torch.cuda.is_available() else "cpu"
 
-def linear_beta_schedule(timesteps, start=0.0001, end=0.02):
+def linear_beta_schedule(timesteps, start=params['beta'], end=params['end']):
     return torch.linspace(start, end, timesteps)
 
 def get_index_from_list(vals, t, x_shape):
