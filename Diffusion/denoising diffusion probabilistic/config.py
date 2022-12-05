@@ -11,7 +11,7 @@ params={
     'num_workers':4,
     'epochs':300,
     'lr':1e-3,
-    'T':1000,
-    'beta':1e-4,
+    'T':200,
+    'beta':0.0001,
     'end':0.02
 }

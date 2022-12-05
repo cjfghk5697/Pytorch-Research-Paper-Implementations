@@ -2,6 +2,8 @@ from models.model import SimpleUnet
 from dataloader import get_data
 from utils import get_loss,sample_plot_image
 from config import params
+import numpy as np
+import torchvision.transforms as transforms
 import torch.optim as optim
 import torch
 
@@ -10,7 +12,13 @@ device="cuda" if torch.cuda.is_available() else "cpu"
 model.to(device)
 optimizer=optim.Adam(model.parameters(), lr=params['lr'])
 epochs=params['epochs']
-dataloader=get_data()
+
+transforms=transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Lambda(lambda t: (t * 2) - 1)
+])
+dataloader=get_data(transforms)
 for epoch in range(epochs):
     for step, batch in enumerate(dataloader):
         optimizer.zero_grad()

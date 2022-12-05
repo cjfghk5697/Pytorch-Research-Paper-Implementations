@@ -4,17 +4,13 @@ from config import params
 
 from torch.utils.data import DataLoader
 
-def get_data():
+def get_data(transforms):
     p2d='./diffusion'
 
     train_ds=dset.StanfordCars(
         root=p2d,
         download=True,
-        transform=transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Resize((params['image_size'],params['image_size'])),
-            transforms.Lambda(lambda t: (t*2)-1)
-        ])
+        transform=transforms
     )
 
 
