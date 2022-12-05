@@ -16,6 +16,7 @@ epochs=params['epochs']
 transforms=transforms.Compose([
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
+        transforms.Resize(params['image_size']),
         transforms.Lambda(lambda t: (t * 2) - 1)
 ])
 dataloader=get_data(transforms)
