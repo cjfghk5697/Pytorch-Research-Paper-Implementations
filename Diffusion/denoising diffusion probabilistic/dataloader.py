@@ -7,9 +7,10 @@ from torch.utils.data import DataLoader
 def get_data(transforms):
     p2d='./diffusion'
 
-    train_ds=dset.StanfordCars(
+    train_ds=dset.FashionMNIST(
         root=p2d,
         download=True,
+        train=True,
         transform=transforms
     )
 

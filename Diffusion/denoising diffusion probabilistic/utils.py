@@ -82,7 +82,7 @@ def sample_timestep(model,x, t):
 def sample_plot_image(model,time):
     # Sample noise
     img_size = params['image_size']
-    img = torch.randn((1, 3, img_size, img_size), device=device)
+    img = torch.randn((1, 1, img_size, img_size), device=device)
     plt.figure(figsize=(15,15))
     plt.axis('off')
     num_images = 10

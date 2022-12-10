@@ -1,4 +1,4 @@
-from models.model import SimpleUnet
+from models.model import Unet
 from dataloader import get_data
 from utils import get_loss,sample_plot_image
 from config import params
@@ -7,16 +7,18 @@ import torchvision.transforms as transforms
 import torch.optim as optim
 import torch
 
-model=SimpleUnet()
+model=Unet(
+    dim=params['image_size'],
+    channels=1,
+    dim_mults=(1, 2, 4,))
 device="cuda" if torch.cuda.is_available() else "cpu"
 model.to(device)
 optimizer=optim.Adam(model.parameters(), lr=params['lr'])
 epochs=params['epochs']
 
 transforms=transforms.Compose([
-        transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Resize(params['image_size']),
+        transforms.Resize((params['image_size'],params['image_size'])),
         transforms.Lambda(lambda t: (t * 2) - 1)
 ])
 dataloader=get_data(transforms)
