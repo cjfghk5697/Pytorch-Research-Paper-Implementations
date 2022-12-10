@@ -21,7 +21,7 @@
 ## Installation
 ```
 $ !git clone https://github.com/cjfghk5697/Paper_Implementation.git
-$ %cd "./Paper_Implementation/"
+$ %cd "./Pytorch-Research-Paper-Implementations/"
 $ sudo pip3 install -r requirements.txt
 ```
 
@@ -35,7 +35,7 @@ We propose a deep convolutional neural network architecture codenamed "Inception
 
 #### Run Example
 ```
-$ %cd "./Paper_Implementation/Vision Models/GoogleNet"
+$ %cd "./Pytorch-Research-Paper-Implementations/Vision Models/GoogleNet"
 $ python main.py
 ```
 
@@ -49,7 +49,7 @@ The depth of representations is of central importance for many visual recognitio
 
 #### Run Example
 ```
-$ %cd "./Paper_Implementation/Vision Models/ResNet"
+$ %cd "./Pytorch-Research-Paper-Implementations/Vision Models/ResNet"
 $ python main.py
 ```
 
@@ -62,7 +62,7 @@ In this work we investigate the effect of the convolutional network depth on its
 
 #### Run Example
 ```
-$ %cd "./Paper_Implementation/Vision Models/VGG16"
+$ %cd "./Pytorch-Research-Paper-Implementations/Vision Models/VGG16"
 $ python main.py
 ```
 
@@ -77,7 +77,7 @@ In recent years, supervised learning with convolutional networks (CNNs) has seen
 
 #### Run Example
 ```
-$ %cd "./Paper_Implementation/GAN/DCGAN"
+$ %cd "./Pytorch-Research-Paper-Implementations/GAN/DCGAN"
 $ python main.py
 ```
 ### InfoGAN
@@ -89,7 +89,7 @@ This paper describes InfoGAN, an information-theoretic extension to the Generati
 
 #### Run Example
 ```
-$ %cd "./Paper_Implementation/GAN/InfoGAN"
+$ %cd "./Pytorch-Research-Paper-Implementations/GAN/InfoGAN"
 $ python main.py
 ```
 ### WGAN
@@ -101,7 +101,7 @@ We introduce a new algorithm named WGAN, an alternative to traditional GAN train
 
 #### Run Example
 ```
-$ %cd "./Paper_Implementation/GAN/WGAN"
+$ %cd "./Pytorch-Research-Paper-Implementations/GAN/WGAN"
 $ python main.py
 ```
 ## Diffusion Implementation
@@ -115,6 +115,6 @@ We present high quality image synthesis results using diffusion probabilistic mo
 
 #### Run Example
 ```
-$ %cd "./Paper_Implementation/Diffusion/denoising diffusion probabilistic"
+$ %cd "./Pytorch-Research-Paper-Implementations/Diffusion/denoising diffusion probabilistic"
 $ python main.py
 ```
