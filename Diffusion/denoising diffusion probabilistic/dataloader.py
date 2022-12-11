@@ -1,5 +1,4 @@
 import torchvision.datasets as dset
-import torchvision.transforms as transforms
 from config import params
 
 from torch.utils.data import DataLoader

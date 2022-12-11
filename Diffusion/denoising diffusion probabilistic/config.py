@@ -5,8 +5,8 @@ All of params is based on DDPM paper.
  end(Float) : 0.02
 """
 params={
-    'image_size':128,
-    'batch_size':16,
+    'image_size':28,
+    'batch_size':128,
     'pin_memory':False,
     'num_workers':4,
     'epochs':300,

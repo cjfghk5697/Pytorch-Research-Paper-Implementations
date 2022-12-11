@@ -2,7 +2,6 @@ from models.model import Unet
 from dataloader import get_data
 from utils import get_loss,sample_plot_image
 from config import params
-import numpy as np
 import torchvision.transforms as transforms
 import torch.optim as optim
 import torch
@@ -30,8 +29,7 @@ for epoch in range(epochs):
         loss=get_loss(model,batch[0],t)
         loss.backward()
         optimizer.step()
-
         if epoch % 5 == 0 and step == 0:
-            print(f"Epoch {epoch} | step {step:03d} Loss: {loss.item()} ")
-            sample_plot_image(model,epoch)
+          print(f"Epoch {epoch} | step {step:03d} Loss: {loss.item()} ")
+          sample_plot_image(model,epoch)
 

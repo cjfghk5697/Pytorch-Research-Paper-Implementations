@@ -42,10 +42,11 @@ betas = linear_beta_schedule(timesteps=T)
 alphas = 1. - betas
 alphas_cumprod = torch.cumprod(alphas, axis=0)
 alphas_cumprod_prev = F.pad(alphas_cumprod[:-1], (1, 0), value=1.0)
+posterior_variance = betas * (1. - alphas_cumprod_prev) / (1. - alphas_cumprod)
+
 sqrt_recip_alphas = torch.sqrt(1.0 / alphas)
 sqrt_alphas_cumprod = torch.sqrt(alphas_cumprod)
 sqrt_one_minus_alphas_cumprod = torch.sqrt(1. - alphas_cumprod)
-posterior_variance = betas * (1. - alphas_cumprod_prev) / (1. - alphas_cumprod)
 
 def get_loss(model, x_0, t):
     x_noisy, noise = forward_diffusion_sample(x_0, t, device)
@@ -105,10 +106,9 @@ def show_tensor_image(image):
         transforms.Lambda(lambda t: t * 255.),
         transforms.Lambda(lambda t: t.numpy().astype(np.uint8)),
         transforms.ToPILImage(),
-    ])
-
+    ]) 
     # Take first image of batch
     if len(image.shape) == 4:
         image = image[0, :, :, :] 
-    plt.imshow(reverse_transforms(image))
+    plt.imshow(reverse_transforms(image), cmap=plt.cm.gray)
     
