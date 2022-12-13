@@ -9,7 +9,7 @@ device="cuda" if torch.cuda.is_available() else "cpu"
 
 def linear_beta_schedule(timesteps, start=params['beta'], end=params['end']):
     return torch.linspace(start, end, timesteps)
-    
+
 def compute_alpha(beta, t):
     beta = torch.cat([torch.zeros(1).to(beta.device), beta], dim=0)
     a = (1 - beta).cumprod(dim=0).index_select(0, t + 1).view(-1, 1, 1, 1)
@@ -96,7 +96,7 @@ def sample_plot_image(model,time):
 
     for i in range(0,T)[::-1]:
         t = torch.full((1,), i, device=device, dtype=torch.long)
-        img = sample_timestep(model,img, t)
+        _,img = sample_timestep(model,img, t)
         if i % stepsize == 0:
             plt.subplot(1, num_images, i/stepsize+1)
             show_tensor_image(img.detach().cpu())
