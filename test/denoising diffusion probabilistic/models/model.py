@@ -5,7 +5,7 @@ from inspect import isfunction
 from functools import partial
 from einops import rearrange
 
-def exists(x):W
+def exists(x):
     return x is not None
 
 def default(val, d):

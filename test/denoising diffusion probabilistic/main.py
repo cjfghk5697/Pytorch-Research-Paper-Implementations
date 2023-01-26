@@ -1,4 +1,4 @@
-from model.model import Unet
+from models.model import Unet
 from dataloader import get_data
 from utils import DenoiseDiffusion
 from config import params
@@ -25,11 +25,11 @@ dataloader=get_data(transforms)
 for epoch in range(epochs):
     for step,batch in enumerate(dataloader):
         optimizer.zero_grad()
-
         t=torch.randint(0,params['T'],(batch[0].shape[0],),device=device).long()
-        loss=diffusion.loss(batch[0],t)
+        
+        loss=diffusion.loss(batch[0].to(device),t)
         loss.backward()
         optimizer.step()
         if epoch%5==0 and step==0:
             print(f"Epoch {epoch} | step {step:03d} Loss: {loss.item()} ")
-            diffusion.sample_plot_image(model,epoch)
+            diffusion.sample_plot_image(epoch)

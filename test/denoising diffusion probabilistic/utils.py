@@ -21,7 +21,6 @@ class DenoiseDiffusion:
     self.alpha_bar=torch.cumprod(self.alpha,dim=0)
     self.n_steps=n_steps
     self.sigma2=self.beta
-    self.device=device
   
   def q_xt_x0(self,x_0:torch.Tensor,t:torch.Tensor):
     mean=gather(self.alpha_bar,t)**0.5*x_0
@@ -46,42 +45,43 @@ class DenoiseDiffusion:
   
   def loss(self,x0:torch.Tensor,noise:Optional[torch.Tensor]=None):
     batch_size=x0.shape[0]
-    t=torch.randint(0,self.n_stpes,(batch_size,),device=x0.device,dtype=torch.long)
+    print(x0.device)
+    t=torch.randint(0,self.n_steps,(batch_size,),device=x0.device,dtype=torch.long)
     if noise is None:
       noise=torch.randn_lise(x0)
     xt=self.q_sample(x0,t,eps=noise)
     eps_theta=self.eps_model(xt,t)
-    return F.mse_loss(noise,eps_theta)
+    return F.mse_loss(noise.to(torch.float32),eps_theta.to(torch.float32))
 
-@torch.no_grad()
-def sample_plot_image(t):
-    # Sample noise
-    img_size = params['image_size']
-    img = torch.randn((1, 1, img_size, img_size), device=device)
-    plt.figure(figsize=(15,15))
-    plt.axis('off')
-    num_images = 10
-    stepsize = int(T/num_images)
+  @torch.no_grad()
+  def sample_plot_image(self,epoch):
+      # Sample noise
+      img_size = params['image_size']
+      img = torch.randn((1, 1, img_size, img_size), device=self.beta.device)
+      plt.figure(figsize=(15,15))
+      plt.axis('off')
+      num_images = 10
+      stepsize = int(self.n_steps/num_images)
 
-    for i in range(0,T)[::-1]:
-        t = torch.full((1,), i, device=self.device, dtype=torch.long)
-        img = self.p_sample(img, t)
-        if i % stepsize == 0:
-            plt.subplot(1, num_images, i/stepsize+1)
-            show_tensor_image(img.detach().cpu())
-    plt.savefig(f"{t} epochs")
-    plt.show()       
+      for i in range(0,self.n_steps)[::-1]:
+          temp = torch.full((1,), i, device=img.device, dtype=torch.long)
+          img = self.p_sample(img, temp)
+          if i % stepsize == 0:
+              plt.subplot(1, num_images, i/stepsize+1)
+              self.show_tensor_image(img.detach().cpu())
+      plt.savefig(f"{epoch} epochs")
+      plt.show()       
 
 
-def show_tensor_image(image):
-    reverse_transforms = transforms.Compose([
-        transforms.Lambda(lambda t: (t + 1) / 2),
-        transforms.Lambda(lambda t: t.permute(1, 2, 0)), # CHW to HWC
-        transforms.Lambda(lambda t: t * 255.),
-        transforms.Lambda(lambda t: t.numpy().astype(np.uint8)),
-        transforms.ToPILImage(),
-    ]) 
-    # Take first image of batch
-    if len(image.shape) == 4:
-        image = image[0, :, :, :] 
-    plt.imshow(reverse_transforms(image), cmap=plt.cm.gray)
+  def show_tensor_image(self,image):
+      reverse_transforms = transforms.Compose([
+          transforms.Lambda(lambda t: (t + 1) / 2),
+          transforms.Lambda(lambda t: t.permute(1, 2, 0)), # CHW to HWC
+          transforms.Lambda(lambda t: t * 255.),
+          transforms.Lambda(lambda t: t.numpy().astype(np.uint8)),
+          transforms.ToPILImage(),
+      ]) 
+      # Take first image of batch
+      if len(image.shape) == 4:
+          image = image[0, :, :, :] 
+      plt.imshow(reverse_transforms(image), cmap=plt.cm.gray)
