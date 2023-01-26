@@ -31,6 +31,7 @@ class DenoiseDiffusion:
     if eps is None:
       eps=torch.rand_like(x0)
     mean,var=self.q_xt_x0(x0,t)
+    #eps.view(*eps.shape,1,params['image_size'],params['image_size'])
     return mean+(var**0.5)*eps
   
   def p_sample(self,xt:torch.Tensor,t:torch.Tensor):
@@ -43,15 +44,14 @@ class DenoiseDiffusion:
     eps=torch.randn(xt.shape,device=xt.device)
     return mean+(var**0.5)*eps
   
-  def loss(self,x0:torch.Tensor,noise:Optional[torch.Tensor]=None):
+  def loss(self,x0:torch.Tensor):
     batch_size=x0.shape[0]
-    print(x0.device)
     t=torch.randint(0,self.n_steps,(batch_size,),device=x0.device,dtype=torch.long)
-    if noise is None:
-      noise=torch.randn_lise(x0)
+    
+    noise=torch.randn_like(x0)
     xt=self.q_sample(x0,t,eps=noise)
     eps_theta=self.eps_model(xt,t)
-    return F.mse_loss(noise.to(torch.float32),eps_theta.to(torch.float32))
+    return F.l1_loss(noise,eps_theta)
 
   @torch.no_grad()
   def sample_plot_image(self,epoch):
