@@ -115,6 +115,6 @@ We present high quality image synthesis results using diffusion probabilistic mo
 
 #### Run Example
 ```
-$ %cd "./Pytorch-Research-Paper-Implementations/Diffusion/denoising diffusion probabilistic"
+$ %cd "./Pytorch-Research-Paper-Implementations/Diffusion/DDPM"
 $ python main.py
 ```
