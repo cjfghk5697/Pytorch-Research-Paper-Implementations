@@ -16,6 +16,7 @@ class DenoiseDiffusion:
   def __init__(self,eps_model:nn.Module,n_steps:int,device:torch.device):
     super().__init__()
     self.eps_model=eps_model
+    self.time_steps=torch.tensor(np.asarray(list(range(0,n_steps,1)))+1).to(device)
     self.beta=torch.linspace(0.0001,0.02,n_steps).to(device)
     self.alpha=1-self.beta
     self.alpha_bar=torch.cumprod(self.alpha,dim=0)
@@ -40,20 +41,11 @@ class DenoiseDiffusion:
     alpha_bar=gather(self.alpha_bar,t)
     alpha=gather(self.alpha,t)
     alpha_prev=gather(self.alpha_prev,t)
-    eps_coef=(1-alpha)/(1-alpha_bar)**0.5
-    mean=(1/(alpha**0.5))*(xt-eps_coef*eps_theta)
-    var=gather(self.sigma2,t)
-    eps=torch.randn(xt.shape,device=xt.device)
-    
-
-    predict=alpha_prev**.5*((xt-(1-alpha)**0.5*eps_theta*xt)/(alpha**0.5))
-    direction=(1-alpha_prev)**0.5*xt
+    predict=alpha_prev**.5*((xt-(1-alpha)**0.5*eps_theta)/(alpha**0.5))
+    direction=((1-alpha_prev)**0.5)*eps_theta
 
     return predict+direction
   
-
-
-    return mean+(var**0.5)*eps
   
   def loss(self,x0:torch.Tensor):
     batch_size=x0.shape[0]
