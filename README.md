@@ -17,7 +17,8 @@
     + [WGAN](#wgan)
   * [Diffusion Implementation](#diffusion-implementation)
     + [DDPM](#denoising-diffusion-probabilistic-model)
-    
+    + [DDIM](#denoising-diffusion-Implicit-model)
+
 ## Installation
 ```
 $ !git clone https://github.com/cjfghk5697/Paper_Implementation.git
@@ -116,5 +117,18 @@ We present high quality image synthesis results using diffusion probabilistic mo
 #### Run Example
 ```
 $ %cd "./Pytorch-Research-Paper-Implementations/Diffusion/DDPM"
+$ python main.py
+```
+
+### Denoising Diffusion Implicit Model
+
+#### Abstract
+Denoising diffusion probabilistic models (DDPMs) have achieved high quality image generation without adversarial training, yet they require simulating a Markov chain for many steps to produce a sample. To accelerate sampling, we present denoising diffusion implicit models (DDIMs), a more efficient class of iterative implicit probabilistic models with the same training procedure as DDPMs. In DDPMs, the generative process is defined as the reverse of a Markovian diffusion process. We construct a class of non-Markovian diffusion processes that lead to the same training objective, but whose reverse process can be much faster to sample from. We empirically demonstrate that DDIMs can produce high quality samples 10× to 50× faster in terms of wall-clock time compared to DDPMs, allow us to trade off computation for sample quality, and can perform semantically meaningful image interpolation directly in the latent space.
+
+[Paper](https://arxiv.org/abs/2010.02502)
+
+#### Run Example
+```
+$ %cd "./Pytorch-Research-Paper-Implementations/Diffusion/DDIM"
 $ python main.py
 ```
