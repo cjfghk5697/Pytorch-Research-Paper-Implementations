@@ -1,10 +1,11 @@
 from typing import Optional
-import torch
-import torch.nn.functional as F
 from torch import nn
-import matplotlib.pyplot as plt
 from config import params
 from torchvision import transforms 
+
+import torch
+import torch.nn.functional as F
+import matplotlib.pyplot as plt
 import numpy as np
 
 def gather(consts: torch.Tensor, t: torch.Tensor):

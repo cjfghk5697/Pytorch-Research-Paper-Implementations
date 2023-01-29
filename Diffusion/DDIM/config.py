@@ -1,9 +1,3 @@
-"""
-All of params is based on DDPM paper.
- T(Int) : 1000
- beta(Float) : 1e-4
- end(Float) : 0.02
-"""
 params={
     'image_size':28,
     'batch_size':128,

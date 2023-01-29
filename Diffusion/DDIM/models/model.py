@@ -1,9 +1,10 @@
-from torch import nn, einsum
-import math
-import torch
 from inspect import isfunction
 from functools import partial
 from einops import rearrange
+from torch import nn, einsum
+
+import math
+import torch
 
 def exists(x):
     return x is not None

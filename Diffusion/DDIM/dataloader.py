@@ -1,6 +1,6 @@
 import torchvision.datasets as dset
-from config import params
 
+from config import params
 from torch.utils.data import DataLoader
 
 def get_data(transforms):

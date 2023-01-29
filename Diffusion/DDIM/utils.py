@@ -1,11 +1,12 @@
+from torch import nn
+from config import params
+from torchvision import transforms 
 from typing import Optional
 import torch
 import torch.nn.functional as F
-from torch import nn
 import matplotlib.pyplot as plt
-from config import params
-from torchvision import transforms 
 import numpy as np
+
 
 def gather(consts: torch.Tensor, t: torch.Tensor):
     """Gather consts for $t$ and reshape to feature map shape"""
@@ -16,13 +17,16 @@ class DenoiseDiffusion:
   def __init__(self,eps_model:nn.Module,n_steps:int,device:torch.device):
     super().__init__()
     self.eps_model=eps_model
-    self.time_steps=torch.tensor(np.asarray(list(range(0,n_steps,1)))+1).to(device)
     self.beta=torch.linspace(0.0001,0.02,n_steps).to(device)
+    self.time_steps=np.asarray(list(range(0,n_steps,1))) #1부터 시작?
     self.alpha=1-self.beta
     self.alpha_bar=torch.cumprod(self.alpha,dim=0)
+
+    self.ddim_alpha=self.alpha_bar[self.time_steps].clone().to(torch.float32)
+    self.ddim_alpha_sqrt=torch.sqrt(self.ddim_alpha)
+    
     self.alpha_prev=torch.cat([self.alpha_bar[0:1], self.alpha_bar[self.time_steps[:-1]]])
     self.n_steps=n_steps
-    self.sigma2=self.beta
   
   def q_xt_x0(self,x_0:torch.Tensor,t:torch.Tensor):
     mean=gather(self.alpha_bar,t)**0.5*x_0
@@ -33,18 +37,17 @@ class DenoiseDiffusion:
     if eps is None:
       eps=torch.rand_like(x0)
     mean,var=self.q_xt_x0(x0,t)
-    #eps.view(*eps.shape,1,params['image_size'],params['image_size'])
     return mean+(var**0.5)*eps
   
   def p_sample(self,xt:torch.Tensor,t:torch.Tensor):
     eps_theta=self.eps_model(xt,t)
-    alpha_bar=gather(self.alpha_bar,t)
-    alpha=gather(self.alpha,t)
+    alpha=gather(self.ddim_alpha,t)
     alpha_prev=gather(self.alpha_prev,t)
-    predict=alpha_prev**.5*((xt-(1-alpha)**0.5*eps_theta)/(alpha**0.5))
-    direction=((1-alpha_prev)**0.5)*eps_theta
-
-    return predict+direction
+    sqrt_one_minus_alpha=(1-alpha).sqrt()
+    pred_x0=(xt-sqrt_one_minus_alpha*eps_theta)/(alpha**0.5)
+    dir_xt=(1.-alpha_prev).sqrt()*eps_theta
+    prev=(alpha_prev**0.5)*pred_x0+dir_xt    
+    return prev
   
   
   def loss(self,x0:torch.Tensor):
