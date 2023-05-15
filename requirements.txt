@@ -1,5 +1,0 @@
-matplotlib==3.6.0
-pandas==1.5.1
-torch==1.13.0
-torchsummary==1.5.1
-torchvision==0.14.0
